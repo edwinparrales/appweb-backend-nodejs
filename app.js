@@ -19,11 +19,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.set('trust proxy', 1);
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'p4rr4les3204',
   resave: false,
   saveUninitialized: false,
   cookie: {
+    sameSite: 'none',
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000
