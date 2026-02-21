@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const pool = require('../config/database');
+const requireAuth = require('../middleware/auth');
 
 router.get('/', async (req, res) => {
   try {
@@ -23,7 +24,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req, res) => {
   try {
     const { titulo, contenido, imagen, categoria } = req.body;
     const result = await pool.query(
@@ -36,7 +37,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAuth, async (req, res) => {
   try {
     const { titulo, contenido, imagen, categoria } = req.body;
     const result = await pool.query(
@@ -52,7 +53,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth, async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM posts WHERE id = $1 RETURNING *', [req.params.id]);
     if (result.rows.length === 0) {
